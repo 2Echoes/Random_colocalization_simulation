@@ -1,0 +1,8 @@
+name = "Random_colocalization_simulation"
+uuid = "9762f47f-d6b1-4a7d-a60d-b5812b0a066f"
+authors = ["Floric Slimani <floric.slimani@live.fr>"]
+version = "0.1.0"
+description = "This project aims at simulatin random co-localization to validate Random colocalization model. Therefor it also includes a module to implet model equation and an analysis notebool to perform validation."
+license = "BSD 2-Clause"
+keywords= ["julia", "modelisation","colocalization","single molecules", "modeling"]
+categories= ["modeling"]
