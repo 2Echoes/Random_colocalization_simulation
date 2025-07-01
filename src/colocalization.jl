@@ -10,11 +10,16 @@ export colocalization_test, count_colocalization, compute_colocalization_across_
 
 
 """
-Return the distances from query points to anchor_points. 
+Return the distances from query points to anchor_points. If anchor points and query points are the same instance, correction for self colocalization is applied : a points cannot colocalize with itself.
 """
 function _find_closest_coordinates(anchor_points::AbstractArray{<:Int,2}, query_points::AbstractArray{<:Int,2})
-    distance_matrix = pairwise(Euclidean(), anchor_points', query_points')
-    distance_to_closest_neighbor = findmin(eachrow(distance_matrix))[1]
+    distance_matrix = pairwise(Euclidean(), query_points', anchor_points')
+
+    if pointer(anchor_points) == pointer(query_points) || size(anchor_points) == size(query_points)
+        distance_matrix .= distance_matrix .+ Diagonal(fill(typemax(Float64), size(distance_matrix,1))) 
+    end
+
+    distance_to_closest_neighbor = minimum.(eachrow(distance_matrix))
     return distance_to_closest_neighbor
 end
 
@@ -52,8 +57,8 @@ function compute_colocalization_across_simulations(
     distance_threshold::Int
     ) :: Array{Bool,2}
 
-    simulation_number, distribution_number,_ = size(query_points)
-    result = Array{Bool,2}(undef, simulation_number, distribution_number)
+    simulation_number, query_points_number, dim = size(query_points)
+    result = Array{Bool,2}(undef, simulation_number, query_points_number)
 
     for simulation in 1:simulation_number
         result[simulation,:] = colocalization_test(

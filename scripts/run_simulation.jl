@@ -3,8 +3,8 @@
 # author : Floric Slimani(floric.slimani@igh.cnrs.fr)
 
 #Import
-include("coordinates_generation.jl")
-include("colocalization.jl")
+include("../src/coordinates_generation.jl")
+include("../src/colocalization.jl")
 
 using ProgressMeter
 using .coordinates_generator
@@ -15,8 +15,8 @@ using CSV
 
 #Simulation Parameters
 simulation_number = 100000
-distance_threshold = 300
-shape = (50, 500,500)
+distance_threshold = 0
+shape = (1, 158,158)
 distributions_abundacy = [10,50,100,200,250,400,500]
 
 """
@@ -95,7 +95,7 @@ function main(
 
     println("Saving results at $output_path")
     @save output_path*"/colocalization_pairwise_counts.jld2" colocalization_counts
-    @save output_path*"/colocalization_truth_table.jld2" colocalization_counts colocalization_truth_table_index
+    @save output_path*"/colocalization_truth_table.jld2" colocalization_truth_table colocalization_truth_table_index shape
 
 end #end main
 

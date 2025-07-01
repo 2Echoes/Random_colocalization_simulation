@@ -5,6 +5,9 @@
 
 module colocalization_modelisation
 
+export self_colocalization_expectancy, self_colocalization_std, colocalization_expectancy, colocalization_std, Ncolocalization_expectancy, Ncolocalization_std
+
+
 """
 The probability that voxel m is occupied with at least one molecule i.
 """
@@ -21,28 +24,24 @@ The covariance of the occupancy of two different voxel by the same distribution 
 """
 c(abundacy::Int, volume::Int)::Float64 = q(abundacy, volume) - p(abundacy,volume)^2
 
-export self_colocalization_expectancy
 function self_colocalization_expectancy(abundancy::Int, volume::Int)::Float64 
-    return abundancy - volume * p(abundancy,volume)
+    return abundancy * p(abundancy -1,volume)
 end
 
-export self_colocalization_std
 function self_colocalization_std(abundancy::Int, volume::Int)::Float64
-    p1 = p(abundancy, volume)
-    c1 = c(abundancy, volume)
+    p1 = p(abundancy-1, volume)
 
-    return sqrt(volume*p1(1-p1) + volume*(volume-1)*c1)
+    # return sqrt(abundancy^2*p1*(1-p1))
+    return sqrt(abundancy*p1*(1-p1))
 end
 
-export colocalization_expectancy
 """
 Expectancy of co-localization of distribution 1 (ie abundancy1) with distribution2 (abundacy2)
 """
 function colocalization_expectancy(abundacy1::Int, abundacy2::Int, volume::Int)::Float64
-    return (abundacy1/volume)*p(abundacy2,volume)
+    return abundacy1*p(abundacy2,volume)
 end
 
-export colocalization_std
 """
 Standard deviation of co-localization of distribution 1 (ie abundancy1) with distribution2 (abundacy2)
 """
@@ -55,7 +54,6 @@ function colocalization_std(abundacy1::Int, abundacy2::Int, volume::Int)
     return sqrt(variance)
 end
 
-export Ncolocalization_expectancy
 """
 Expectancy deviation of voxel co-occupancy with at least 1 element of all distributions (ie abundancies).
 """
@@ -64,7 +62,6 @@ function Ncolocalization_expectancy(abundancies::Vector{Int}, volume::Int)::Floa
     return v*p_combination
 end
 
-export Ncolocalization_std
 """
 Standard deviation of voxel co-occupancy with at least 1 element of all distributions (ie abundancies).
 """
