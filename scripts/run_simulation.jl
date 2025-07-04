@@ -44,7 +44,7 @@ function main(
         )
         CSV.write(output_path*"/colocalization_simulation_parameters.csv", Sumup_df)
         
-    println("Starting $replicate_number simulations for $distributions_number distributions with $sampling_number cells:")
+    println("Starting $replicate_number simulations for $sampling_number cells with $distributions_number distributions:")
     
     #Generate coordinates
     replicates_colocalization_truth_table = Vector(undef,replicate_number)
